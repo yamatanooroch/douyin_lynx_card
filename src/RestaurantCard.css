@@ -1,0 +1,373 @@
+/* RestaurantCard.css */
+
+.card-container {
+    display: flex;
+    flex-direction: column;
+    background-color: #ffffff;
+    border-radius: 24rpx;
+    padding: 24rpx;
+    box-sizing: border-box;
+    width: 100%;
+    margin-bottom: 20rpx;
+}
+
+/* --- 头部区域 --- */
+.shop-section {
+    display: flex;
+    flex-direction: row;
+    margin-bottom: 30rpx;
+}
+
+/* Logo 区 */
+.logo-wrapper {
+    position: relative;
+    width: 150rpx;
+    height: 150rpx;
+    margin-right: 20rpx;
+    flex-shrink: 0;
+    overflow: visible;
+}
+
+.shop-logo {
+    width: 100%;
+    height: 100%;
+    border-radius: 12rpx;
+    background-color: #f0f0f0;
+}
+
+.badge-top-left {
+    /* position: absolute; */
+    top: -5rpx;
+    left: 0rpx;
+    width: 80rpx;
+    /* 根据svg实际比例调整 */
+    height: 36rpx;
+}
+
+/* 在现有样式中添加 */
+.badge-top-left-container {
+    position: absolute;
+    top: 0rpx;
+    left: 0rpx;
+    width: 80rpx;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* 右侧信息区 */
+.info-column {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    /* 稍微增加一点底部padding以适应标签行 */
+    padding-bottom: 2rpx;
+}
+
+/* Line 1: Name */
+.shop-name {
+    font-size: 34rpx;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 6rpx;
+
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: block;
+    /* 确保它是块级表现以便截断 */
+}
+
+/* Line 2: Rating */
+.row-rating {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    margin-bottom: 6rpx;
+}
+
+.stars-flex {
+    display: flex;
+    flex-direction: row;
+    margin-right: 10rpx;
+    align-items: center;
+    /* 确保确保确保图标垂直居中 */
+    height: 24rpx;
+    /* 与图标高度一致 */
+}
+
+.icon-star {
+    width: 24rpx;
+    height: 24rpx;
+    margin-right: 2rpx;
+}
+
+.text-score {
+    font-size: 26rpx;
+    color: #FF3B30;
+    font-weight: bold;
+    margin-right: 10rpx;
+}
+
+.text-reviews {
+    font-size: 24rpx;
+    color: #999;
+}
+
+/* Line 3: Meta (Category/Area/Price... Distance) */
+.row-meta {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10rpx;
+    /* 确保这行底部与Logo底部大致对齐，如果Logo高度是150rpx，前三行大概占用了这个高度 */
+}
+
+.meta-left {
+    display: flex;
+    flex-direction: row;
+}
+
+.text-meta {
+    font-size: 22rpx;
+    color: #666;
+}
+
+.margin-h {
+    margin: 0 10rpx;
+    /* 增加间距 */
+}
+
+.text-distance {
+    font-size: 22rpx;
+    color: #666;
+}
+
+/* Line 4: Tags */
+.row-tags {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: center;
+}
+
+.tag-pink {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #FFF0F0;
+    /* 浅粉底色 */
+    border-radius: 6rpx;
+    padding: 4rpx 4rpx;
+    margin-right: 6rpx;
+    margin-bottom: 6rpx;
+}
+
+.icon-rank-bg {
+    width: 60rpx;
+    height: 20rpx;
+    margin-right: 4rpx;
+}
+
+.text-pink-tag {
+    font-size: 20rpx;
+    color: #FF4D80;
+    font-weight: 500;
+}
+
+.tag-gray {
+    font-size: 20rpx;
+    color: #666;
+    background-color: #F5F5F5;
+    padding: 4rpx 4rpx;
+    border-radius: 6rpx;
+    margin-right: 6rpx;
+    margin-bottom: 6rpx;
+}
+
+/* --- 菜品滚动区 --- */
+.scroll-dishes {
+    width: 100%;
+    /* 确保高度自适应 */
+}
+
+.dish-list-container {
+    display: flex;
+    flex-direction: row;
+}
+
+.dish-card {
+    display: flex;
+    flex-direction: column;
+    width: 210rpx;
+    margin-right: 18rpx;
+}
+
+.img-box {
+    position: relative;
+    width: 210rpx;
+    height: 210rpx;
+    margin-bottom: 12rpx;
+    border-radius: 16rpx;
+    overflow: hidden;
+    /* 确保标签不超出圆角 */
+}
+
+.dish-img {
+    width: 100%;
+    height: 100%;
+    background-color: #eee;
+}
+
+/* 标签浮层定位 */
+.overlay-position {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+}
+
+/* 组合标签 (补贴+减10) */
+.badge-group {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-end;
+}
+
+.badge-layer {
+    position: relative;
+    /* 用于内部文字定位 */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* 补贴背景层 */
+.bg-subsidy {
+    width: 110rpx;
+    height: 36rpx;
+}
+
+.txt-subsidy {
+    position: absolute;
+    left: 8rpx;
+    font-size: 22rpx;
+    color: white;
+    top: 5rpx;
+}
+
+/* 减10背景层 */
+.minus-layer {
+    margin-left: -12rpx;
+    /* 核心：负边距实现重叠 */
+}
+
+.bg-minus {
+    width: 70rpx;
+    height: 36rpx;
+}
+
+.txt-minus {
+    position: absolute;
+    right: 17rpx;
+    font-size: 20rpx;
+    color: white;
+    font-weight: bold;
+    top: 7rpx;
+}
+
+/* 倒计时标签 */
+.badge-timer {
+    background: linear-gradient(to right, #FF8800, #FF3300);
+    padding: 5rpx 10rpx;
+    border-top-right-radius: 12rpx;
+    align-self: flex-start;
+    /* 靠左 */
+    display: inline-flex;
+}
+
+.timer-txt {
+    font-size: 22rpx;
+    color: white;
+}
+
+.badge-simple {
+    background-color: #FF3300;
+    padding: 4rpx 8rpx;
+    border-top-right-radius: 12rpx;
+    display: inline-flex;
+}
+
+.simple-txt {
+    font-size: 18rpx;
+    color: white;
+}
+
+/* 菜品文字与价格 */
+.dish-title {
+    font-size: 26rpx;
+    color: #333;
+    line-height: 34rpx;
+    height: 68rpx;
+    /* 限制两行高度 */
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin-bottom: 8rpx;
+
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    /* -webkit-line-clamp: 2; */
+    /* line-clamp: 2; */
+    /* 限制为2行 */
+    /* -webkit-box-orient: vertical; */
+}
+
+.dish-footer {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #FFF0F0;
+    border-radius: 12rpx;
+    padding: 8rpx 12rpx;
+}
+
+.price-wrap {
+    display: flex;
+    flex-direction: row;
+    align-items: baseline;
+}
+
+.symbol {
+    font-size: 22rpx;
+    color: #FF3B30;
+}
+
+.price-now {
+    font-size: 32rpx;
+    color: #FF3B30;
+    font-weight: bold;
+    margin-right: 6rpx;
+}
+
+.price-old {
+    font-size: 22rpx;
+    color: #ccc;
+    text-decoration: line-through;
+}
+
+.btn-buy {
+    background: linear-gradient(to right, #FF3333, #ff8833);
+    padding: 8rpx 16rpx;
+    border-radius: 8rpx;
+}
+
+.btn-text {
+    font-size: 22rpx;
+    color: white;
+    font-weight: bold;
+}

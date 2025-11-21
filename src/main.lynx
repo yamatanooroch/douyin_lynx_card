@@ -1,0 +1,22 @@
+<template>
+  <div class="app-container">
+    <RestaurantCard />
+  </div>
+</template>
+
+<script>
+import RestaurantCard from './RestaurantCard.lynx';
+
+export default {
+  components: {
+    RestaurantCard
+  }
+};
+</script>
+
+<style>
+.app-container {
+  padding: 16px;
+  background: #F8F8F8;
+}
+</style>
