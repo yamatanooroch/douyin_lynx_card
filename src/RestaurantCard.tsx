@@ -109,7 +109,7 @@ function DishList() {
   // 渲染列表项
   const renderDishCard = (item: DishItem, index: number) => (
     // 使用 <cell> 包裹每个列表项，这是 <list> 组件的要求
-    <cell key={item.id} style={{ width: '240px', marginRight: '16px' }}>
+    <cell key={item.id} item-key={`dish-${item.id}`} style={{ width: '240px', marginRight: '16px' }}>
       <view className="dish-card">
         {/* 图片容器 */}
         <view className="img-box">
@@ -160,7 +160,7 @@ function DishList() {
   const renderLoadMoreFooter = () => {
     // 渲染加载更多状态或结束提示
     return (
-      <cell key="footer-cell">
+      <cell key="footer-cell" item-key="footer-cell">
         <view style={{ padding: '20px', alignItems: 'center', justifyContent: 'center' }}>
           {loading && <text style={{ color: '#999' }}>正在加载...</text>}
           {isEnd && dataList.length > 0 && <text style={{ color: '#999' }}>—— 已经到底啦 ——</text>}
