@@ -13,7 +13,7 @@ import ASSET_MINUS_BG from './assets/Rectangle 3.2.png';    // 减10背景
 import ASSET_DISH_1 from './assets/菜品1.png';
 import ASSET_DISH_2 from './assets/菜品2.png';
 import ASSET_DISH_3 from './assets/菜品3.png';
-import ASSET_DISH_4 from './assets/菜品4.png'; // 注意文件名可能有空格，需根据实际文件调整
+import ASSET_DISH_4 from './assets/菜品4.png'; 
 
 
 // 模拟数据
@@ -92,7 +92,7 @@ export function RestaurantCard({
         {/* 右侧：信息列表 */}
         <view className="info-column">
           {/* 第一行：店名 */}
-          <text className="shop-name" >椒鸣椒麻馆(五道口店)</text>
+          <text className="shop-name" >{shopName}</text>
 
           {/* 第二行：评分 */}
           <view className="row-rating">
