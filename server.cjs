@@ -1,7 +1,7 @@
 // server.js
 const express = require('express');
 const app = express();
-const port = 3000;
+const port = 3001;
 
 // 模拟列表数据
 function generateMockData(page, pageSize) {
