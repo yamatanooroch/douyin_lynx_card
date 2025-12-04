@@ -371,3 +371,329 @@
     color: white;
     font-weight: bold;
 }
+
+/* ========================================
+   新功能样式：搜索、筛选、弹窗、倒计时
+   ======================================== */
+
+/* 菜品列表容器 */
+.dish-list-container {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+
+/* 搜索栏 */
+.search-bar {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    padding: 12rpx 16rpx;
+    gap: 12rpx;
+}
+
+.search-input-wrapper {
+    flex: 1;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    background-color: #f5f5f5;
+    border-radius: 20rpx;
+    padding: 8rpx 16rpx;
+}
+
+.search-icon {
+    width: 28rpx;
+    height: 28rpx;
+    margin-right: 8rpx;
+}
+
+.search-input {
+    flex: 1;
+    font-size: 24rpx;
+    color: #333;
+    background: transparent;
+    border: none;
+}
+
+.search-clear {
+    width: 32rpx;
+    height: 32rpx;
+    border-radius: 16rpx;
+    background-color: #ccc;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.search-clear-text {
+    font-size: 20rpx;
+    color: white;
+    font-weight: bold;
+}
+
+/* 刷新按钮 */
+.refresh-btn {
+    width: 56rpx;
+    height: 56rpx;
+    border-radius: 28rpx;
+    background-color: #f5f5f5;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.refresh-btn.refreshing {
+    opacity: 0.6;
+}
+
+.refresh-icon {
+    width: 32rpx;
+    height: 32rpx;
+}
+
+/* 筛选标签 */
+.filter-tags {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    padding: 8rpx 16rpx;
+    gap: 12rpx;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+}
+
+.filter-tag {
+    padding: 8rpx 16rpx;
+    border-radius: 16rpx;
+    background-color: #f5f5f5;
+    flex-shrink: 0;
+}
+
+.filter-tag-active {
+    background-color: #FFE5E5;
+}
+
+.filter-tag-text {
+    font-size: 22rpx;
+    color: #666;
+}
+
+.filter-tag-text-active {
+    color: #FF3B30;
+    font-weight: bold;
+}
+
+.filter-count {
+    margin-left: auto;
+    padding-left: 12rpx;
+}
+
+.filter-count-text {
+    font-size: 20rpx;
+    color: #999;
+}
+
+/* 刷新指示器 */
+.refresh-indicator {
+    padding: 8rpx 16rpx;
+    background-color: #FFF8E1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.refresh-indicator-text {
+    font-size: 22rpx;
+    color: #FF9800;
+}
+
+/* 无结果提示 */
+.no-result {
+    padding: 40rpx 16rpx;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 16rpx;
+}
+
+.no-result-text {
+    font-size: 26rpx;
+    color: #999;
+}
+
+.reset-filter-btn {
+    padding: 12rpx 24rpx;
+    border-radius: 20rpx;
+    background-color: #FF3B30;
+}
+
+.reset-filter-text {
+    font-size: 24rpx;
+    color: white;
+}
+
+/* 菜品卡片标签 */
+.dish-tag {
+    position: absolute;
+    top: 0;
+    right: 0;
+    padding: 4rpx 12rpx;
+    border-bottom-left-radius: 12rpx;
+}
+
+.dish-tag-hot {
+    background-color: #FF3B30;
+}
+
+.dish-tag-new {
+    background-color: #FF9500;
+}
+
+.dish-tag-subsidy {
+    background-color: #34C759;
+}
+
+.dish-tag-text {
+    font-size: 18rpx;
+    color: white;
+    font-weight: bold;
+}
+
+/* ========================================
+   弹窗样式
+   ======================================== */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+
+.modal-content {
+    width: 80%;
+    max-width: 600rpx;
+    background-color: white;
+    border-radius: 24rpx;
+    overflow: hidden;
+}
+
+.modal-header {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    padding: 24rpx;
+    border-bottom: 1rpx solid #eee;
+}
+
+.modal-title {
+    font-size: 32rpx;
+    font-weight: bold;
+    color: #333;
+}
+
+.modal-close {
+    width: 48rpx;
+    height: 48rpx;
+    border-radius: 24rpx;
+    background-color: #f5f5f5;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.modal-close-text {
+    font-size: 32rpx;
+    color: #666;
+}
+
+.modal-image {
+    width: 100%;
+    height: 300rpx;
+}
+
+.modal-body {
+    padding: 24rpx;
+}
+
+.modal-desc {
+    font-size: 26rpx;
+    color: #666;
+    margin-bottom: 16rpx;
+}
+
+.modal-price-row {
+    display: flex;
+    flex-direction: row;
+    align-items: baseline;
+    gap: 12rpx;
+    margin-bottom: 16rpx;
+}
+
+.modal-price {
+    font-size: 40rpx;
+    color: #FF3B30;
+    font-weight: bold;
+}
+
+.modal-origin {
+    font-size: 26rpx;
+    color: #ccc;
+    text-decoration: line-through;
+}
+
+.modal-tag-row {
+    display: flex;
+    flex-direction: row;
+    gap: 8rpx;
+}
+
+.modal-tag {
+    padding: 6rpx 16rpx;
+    border-radius: 12rpx;
+}
+
+.modal-tag-hot {
+    background-color: #FFE5E5;
+}
+
+.modal-tag-new {
+    background-color: #FFF3E0;
+}
+
+.modal-tag-subsidy {
+    background-color: #E8F5E9;
+}
+
+.modal-tag-text {
+    font-size: 22rpx;
+    color: #333;
+}
+
+.modal-footer {
+    padding: 24rpx;
+    border-top: 1rpx solid #eee;
+}
+
+.modal-buy-btn {
+    background: linear-gradient(to right, #FF3333, #ff8833);
+    padding: 20rpx;
+    border-radius: 40rpx;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.modal-buy-text {
+    font-size: 30rpx;
+    color: white;
+    font-weight: bold;
+}
