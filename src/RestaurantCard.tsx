@@ -2,6 +2,13 @@ import React, { useState, useEffect, useRef } from 'react';
 // import { root, view, text, image, list, cell, scrollview } from '@lynx-js/react';
 import './RestaurantCard.css'; // 样式文件保持不变
 
+// 性能监控：记录 FMP 时间
+const performanceMetrics = {
+  startTime: Date.now(),
+  fmpTime: 0,
+  dataLoadTime: 0,
+};
+
 // --- 资源引入 ---
 import ASSET_LOGO from './assets/Rectangle 5.8.png';
 import ASSET_HEARTBEAT_TAG from './assets/Group 2090053571.png';
@@ -16,8 +23,60 @@ import ASSET_DISH_2 from './assets/菜品2.png';
 import ASSET_DISH_3 from './assets/菜品3.png';
 import ASSET_DISH_4 from './assets/菜品4.png';
 
-// 🚨 Mock API URL - 使用 localhost
-const MOCK_API_URL = 'http://localhost:3001/api/list/data';
+
+
+// 🚨 Mock API URL - 使用具体 IP 地址（手机和电脑在同一网络下）
+const MOCK_API_URL = 'http://10.21.170.147:3001/api/list/data';
+
+// 本地后备数据（当 API 请求失败时使用）
+const FALLBACK_DISHES: DishItem[] = [
+  {
+    id: 1,
+    title: '招牌椒麻鸡',
+    content: '精选农家土鸡',
+    img: ASSET_DISH_1,
+    price: 68,
+    origin: 88,
+    type: 'subsidy',
+    subsidyText: '特惠补贴',
+    minusText: '减10',
+  },
+  {
+    id: 2,
+    title: '麻辣小龙虾',
+    content: '鲜活小龙虾现做',
+    img: ASSET_DISH_2,
+    price: 99,
+    origin: 128,
+    type: 'timer',
+    subsidyText: '特惠补贴',
+    minusText: '减15',
+    timerText: '02:30:00',
+  },
+  {
+    id: 3,
+    title: '水煮牛肉',
+    content: '精选黄牛肉',
+    img: ASSET_DISH_3,
+    price: 58,
+    origin: 78,
+    type: 'subsidy',
+    subsidyText: '特惠补贴',
+    minusText: '减8',
+  },
+  {
+    id: 4,
+    title: '口水鸡',
+    content: '秘制红油口水鸡',
+    img: ASSET_DISH_4,
+    price: 45,
+    origin: 58,
+    type: 'timer',
+    subsidyText: '特惠补贴',
+    minusText: '减5',
+    timerText: '01:15:30',
+  },
+];
 
 // --- 类型定义 ---
 interface DishItem {
@@ -43,7 +102,7 @@ function DishList() {
   // 使用 useState 替代硬编码的 dishes 数组
   const [dataList, setDataList] = useState<DishItem[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);  // 初始为 true，避免首次渲染时显示空状态
   const [isEnd, setIsEnd] = useState(false);
   // 移除 initialized 状态，改用 dataList.length === 0 && loading 来判断首次加载状态
   const pageSize = 10;
@@ -59,13 +118,13 @@ function DishList() {
     content: mockItem.content,
     // 由于 Mock Server不返回图片URL，我们继续使用本地导入的资源作为占位符
     img: [ASSET_DISH_1, ASSET_DISH_2, ASSET_DISH_3, ASSET_DISH_4][currentListLength % 4],
-    price: 75,
-    origin: 99,
+    price: mockItem.price || 75,
+    origin: mockItem.origin || 99,
     // 使用总索引来确定类型
     type: currentListLength % 2 === 0 ? 'subsidy' : 'timer',
     subsidyText: '特惠补贴',
-    minusText: '减10',
-    timerText: '12:88:88'
+    minusText: '减' + (5 + Math.floor(Math.random() * 15)),
+    timerText: '12:30:00'
   });
 
 
@@ -91,7 +150,7 @@ function DishList() {
       if (result.data && result.data.length > 0) {
         // 使用函数式更新确保基于最新状态
         setDataList(prevList => {
-          const newDishes = result.data.map((item: any, index: number) => 
+          const newDishes = result.data.map((item: any, index: number) =>
             mapMockData(item, prevList.length + index)
           );
           console.log('[DishList] Mapped dishes:', newDishes);
@@ -109,7 +168,9 @@ function DishList() {
 
     } catch (error) {
       console.error('[DishList] Fetch data failed:', error);
-      // 生产环境中应有错误处理和重试机制
+      // API 请求失败时，使用本地后备数据
+      console.log('[DishList] Using fallback data');
+      setDataList(FALLBACK_DISHES);
       isEndRef.current = true;
       setIsEnd(true);
     } finally {
@@ -213,22 +274,65 @@ function DishList() {
   // 正常渲染列表
   console.log('[DishList] Rendering dish list with', dataList.length, 'items');
 
+  // 记录首次有数据时的性能指标（FMP）
+  useEffect(() => {
+    if (dataList.length > 0 && performanceMetrics.fmpTime === 0) {
+      performanceMetrics.fmpTime = Date.now() - performanceMetrics.startTime;
+      console.log('[Performance] FMP (First Meaningful Paint):', performanceMetrics.fmpTime, 'ms');
+    }
+  }, [dataList.length]);
 
-  // 使用 scroll-view 实现横向滚动
+  // 使用 list 组件实现横向滚动 - 利用元素回收和懒加载优化性能
+  // list 组件只渲染可视区域内的节点，大大提升首屏渲染速度
   return (
-    <scroll-view
+    <list
       className="scroll-dishes"
-      scroll-x={true}
-      enable-flex={true}
-      show-scrollbar={false}
-    // 添加 onScrollToLower={handleScrollToBottom} 如果您希望支持自动加载
+      scroll-orientation="horizontal"
+      list-type="single"
+      span-count={1}
+      scroll-bar-enable={false}
+      lower-threshold-item-count={3}
+      bindscrolltolower={() => {
+        // 滚动到底部时加载更多数据
+        console.log('[DishList] Scroll to lower triggered');
+        if (!loading && !isEnd) {
+          loadData(currentPage);
+        }
+      }}
+      style={{
+        width: '100%',
+        height: '180px',
+        listMainAxisGap: '8px',
+        paddingLeft: '12px',
+        paddingRight: '12px',
+      }}
+      __lynx_timing_flag="__lynx_timing_actual_fmp"
     >
-      <view className="dish-list-container">
-        {dataList.map(renderDishCard)}
-        {/* 加载更多状态 */}
-        {renderLoadMoreFooter()}
-      </view>
-    </scroll-view>
+      {dataList.map((item, index) => (
+        <list-item
+          item-key={`dish-item-${item.id}`}
+          key={`dish-item-${item.id}`}
+          estimated-main-axis-size-px={130}
+        >
+          {renderDishCard(item, index)}
+        </list-item>
+      ))}
+      {/* 加载更多状态 */}
+      {loading && (
+        <list-item item-key="loading" key="loading">
+          <view style={{ width: '80px', height: '100%', alignItems: 'center', justifyContent: 'center' }}>
+            <text style={{ color: '#999', fontSize: '12px' }}>加载中...</text>
+          </view>
+        </list-item>
+      )}
+      {isEnd && dataList.length > 0 && (
+        <list-item item-key="end" key="end">
+          <view style={{ width: '80px', height: '100%', alignItems: 'center', justifyContent: 'center' }}>
+            <text style={{ color: '#999', fontSize: '12px' }}>到底啦</text>
+          </view>
+        </list-item>
+      )}
+    </list>
   );
 }
 
