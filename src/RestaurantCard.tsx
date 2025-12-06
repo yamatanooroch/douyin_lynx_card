@@ -109,9 +109,8 @@ const FALLBACK_DISHES: DishItem[] = [
   },
 ];
 
-// ========================================
+
 // 倒计时 Hook
-// ========================================
 function useCountdown(endTime: number | undefined) {
   const [timeLeft, setTimeLeft] = useState('');
 

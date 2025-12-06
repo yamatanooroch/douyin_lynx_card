@@ -3,14 +3,14 @@
 ## 一、基础功能实现
 
 ### 1. 餐厅列表
-- App组件作为根容器，scroll-view实现纵向滚动列表，循环渲染RestaurantCard组件展示餐厅信息。
-- App.tsx: 餐厅卡片数据源cardDataList，包含餐厅 ID 和名称等基础信息，通过 Props 传递给子组件。
+- App: 根容器，scroll-view: 纵向滚动列表，循环渲染RestaurantCard组件展示餐厅信息。
+- App.tsx: 餐厅卡片数据源cardDataList，包含餐厅ID和名称等基础信息，通过Props传递给子组件。
 - App.css: 全局容器样式，设置100vw和100vh的视口占比，使用#f5f5f5作为背景色，移除内边距确保列表从顶部开始排列。
 
 ### 2. 餐厅卡片组件
-- 卡片布局：RestaurantCard组件采用上下分区设计，上半部分展示餐厅基本信息，下半部分展示菜品列表。
+- 卡片布局：RestaurantCard组件采用上下分区设计，上半部分：餐厅基本信息；下半部分：菜品列表。
 - 餐厅信息展示：
-    - 左侧显示餐厅 Logo 及角标（如 "2025 年上榜餐厅" 标识）
+    - 左侧显示餐厅Logo及角标（如 "2025 年上榜餐厅" 标识）
     - 右侧分四行展示：餐厅名称（文字溢出省略）、评分星级、分类\区域\人均消费等元数据、特色标签
 - 菜品滚动展示：
     - 使用 Lynx `<list>` 组件实现菜品列表水平滚动，支持100个团购商品
@@ -18,7 +18,7 @@
     - 标签类型：补贴+减价组合标签、倒计时标签等，绝对定位实现标签叠加
 
 ### 3. Mock 数据服务
-- 使用 Node.js Express 搭建本地 Mock Server（server.cjs）
+- 使用Node.js Express搭建本地Mock Server server.cjs）
 - 支持分页接口：`/api/list/data?page=1&pageSize=10`
 - 服务器绑定 `0.0.0.0`，支持局域网内手机访问
 - 返回真实菜品名称（招牌椒麻鸡、麻辣小龙虾等32种菜品循环）
@@ -28,12 +28,12 @@
 
 ## 二、性能优化（P0）
 
-### 问题背景
+### 问题
 渲染100个团购商品会导致首次渲染耗时较长，但用户首屏只能看到有限的几个商品。
 
 ### 优化方案
 
-#### 【高级】使用 `<list>` 组件实现滚动加载
+#### 使用 `<list>` 组件实现滚动加载
 将原有的 `<scroll-view>` 替换为 Lynx 的 `<list>` 组件，利用其内置的**元素回收**和**懒加载**机制：
 
 ```tsx
@@ -69,7 +69,7 @@
 | **预估尺寸** | 使用 `estimated-main-axis-size-px` 让列表提前计算布局 |
 | **分页请求** | 每次只请求10条数据，减少首屏网络开销 |
 
-#### 【可选】性能监控 API 集成
+#### 性能监控 API 集成
 集成 Lynx 提供的 `MetricActualFmpEntry` 性能监控：
 
 1. **添加性能指标记录对象**：
@@ -101,7 +101,7 @@ useEffect(() => {
 ## 三、了解编译流程（P1）
 
 ### 目标
-学习 rspeedy 的编译配置，将输出的图片名称重命名为 `[name].[你的名字].[contenthash:8][ext]` 格式。
+学习 rspeedy 的编译配置，将输出的图片名称重命名为 `[name].[名字].[contenthash:8][ext]` 格式。
 
 ### 实现方式
 在 `lynx.config.ts` 中配置 `output.filename.image`：
@@ -121,7 +121,7 @@ export default defineConfig({
 
 ### 配置说明
 - `[name]`：原始文件名
-- `.gyy.`：自定义的作者标识
+- `.gyy.`：作者标识
 - `[contenthash:8]`：8位内容哈希，用于缓存控制
 - `[ext]`：原始文件扩展名
 
@@ -140,7 +140,7 @@ dist/static/
 ### 目标
 开发一个 Rspack 插件，在所有产物文件（JS、CSS、HTML、JSON）的头部添加自定义注释。
 
-### 插件实现
+### 实现
 文件位置：`plugins/banner-plugin.js`
 
 ```javascript
@@ -207,14 +207,14 @@ export default defineConfig({
 
 ---
 
-## 五、交互功能增强（P2）
+## 五、添加交互功能
 
-### 1. 倒计时动态更新 ⏱️
+### 1. 倒计时动态更新
 
 #### 功能描述
 对于限时特惠类菜品，显示实时倒计时，每秒自动更新，格式为 `HH:MM:SS`。
 
-#### 实现方式
+#### 实现
 创建自定义 Hook `useCountdown`，使用 `setInterval` 每秒更新剩余时间：
 
 ```tsx
@@ -268,7 +268,7 @@ function DishCard({ item, onTap }) {
 }
 ```
 
-#### 技术要点
+#### 要点
 | 要点 | 说明 |
 |------|------|
 | **条件触发** | 仅当 `item.type === 'timer'` 时启用倒计时 |
@@ -278,7 +278,7 @@ function DishCard({ item, onTap }) {
 
 ---
 
-### 2. 菜品点击交互 👆
+### 2. 菜品点击交互
 
 #### 功能描述
 点击菜品卡片弹出详情弹窗，展示菜品大图、名称、描述、价格和标签信息，支持"立即抢购"操作。
@@ -359,7 +359,7 @@ const handleCloseModal = useCallback(() => {
 
 ---
 
-### 3. 刷新功能 🔄
+### 3. 刷新
 
 #### 功能描述
 提供手动刷新按钮，点击后重新加载第一页数据，刷新期间显示加载状态。
@@ -431,7 +431,7 @@ const handleRefresh = useCallback(async () => {
 
 ---
 
-### 4. 搜索/筛选功能 🔍
+### 4. 搜索/筛选
 
 #### 功能描述
 提供搜索框和筛选标签，支持按菜品名称搜索，按标签（全部/特惠/热销/新品）筛选。
@@ -563,7 +563,7 @@ interface DishItem {
 )}
 ```
 
-**样式定义**：
+**样式**：
 
 ```css
 .dish-tag {
@@ -584,37 +584,6 @@ interface DishItem {
     font-weight: bold;
 }
 ```
-
----
-
-## 六、资源文件说明
-
-### 图标资源
-| 文件 | 用途 |
-|------|------|
-| `assets/sousuo.png` | 搜索框图标 |
-| `assets/huanyihuan.png` | 刷新按钮正常状态图标 |
-| `assets/shouye.png` | 刷新按钮加载状态图标 |
-
-### 菜品图片
-| 文件 | 用途 |
-|------|------|
-| `assets/菜品1.png` | 菜品展示图片 1 |
-| `assets/菜品2.png` | 菜品展示图片 2 |
-| `assets/菜品3.png` | 菜品展示图片 3 |
-| `assets/菜品4.png` | 菜品展示图片 4 |
-
-### 店铺资源
-| 文件 | 用途 |
-|------|------|
-| `assets/Rectangle 5.8.png` | 店铺 Logo |
-| `assets/Group 2090053571.png` | 心动标签 |
-| `assets/Rectangle.png` | 上榜餐厅角标 |
-| `assets/编组_副本.png` | 满星图标 |
-| `assets/编组.png` | 半星图标 |
-| `assets/0.png` | 空星图标 |
-| `assets/Rectangle 4646.png` | 特惠补贴背景 |
-| `assets/Rectangle 3.2.png` | 减价标签背景 |
 
 ---
 
