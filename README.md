@@ -9,8 +9,12 @@ First, install the dependencies:
 ```bash
 npm install
 ```
+Then, open mock:
+```bash
+node server.cjs
+```
 
-Then, run the development server:
+Last, run the development server:
 
 ```bash
 npm run dev
