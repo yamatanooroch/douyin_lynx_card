@@ -1,11 +1,30 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import './RestaurantCard.css';
+import {
+  createPerformanceReport,
+  formatPerformanceReport,
+  getFmpEntry,
+  type PerformanceMetrics as PerfMetrics
+} from './utils/performanceMonitor';
 
-// 性能监控
-const performanceMetrics = {
+// 引入 Lynx 性能监控 API
+declare const __LYNX_NATIVE_API__: any;
+
+// 性能监控对象
+const performanceMetrics: PerfMetrics = {
   startTime: Date.now(),
   fmpTime: 0,
   dataLoadTime: 0,
+  lynxFmpTime: 0,  // Lynx 官方 FMP 时间
+  firstRenderTime: 0,  // 首次渲染时间
+  listItemCount: 0,  // 列表项数量
+};
+
+// 性能监控辅助函数
+const logPerformanceMetrics = () => {
+  const report = createPerformanceReport(performanceMetrics);
+  const formattedReport = formatPerformanceReport(report);
+  console.log(formattedReport);
 };
 
 // --- 资源引入 ---
@@ -25,8 +44,9 @@ import ASSET_SEARCH from './assets/sousuo.png';
 import ASSET_LOADING from './assets/shouye.png';
 import ASSET_REFRESH from './assets/huanyihuan.png';
 
-// API URL
-const MOCK_API_URL = 'http://10.21.170.147:3001/api/list/data';
+// API URL（手机测试时改为本机 IP，电脑浏览器测试用 localhost）
+// 运行 npm run dev 后终端会显示可访问的 IP 地址
+const MOCK_API_URL = 'http://10.21.175.157:3001/api/list/data';
 
 // 筛选标签类型
 type FilterTag = 'all' | 'subsidy' | 'hot' | 'new';
@@ -272,7 +292,7 @@ function DishList() {
   const [selectedDish, setSelectedDish] = useState<DishItem | null>(null);
   const [showModal, setShowModal] = useState(false);
 
-  const pageSize = 10;
+  const pageSize = 10; // 首屏加载 10 项，滚动时懒加载更多（性能优化）
   const loadingRef = useRef(false);
   const isEndRef = useRef(false);
 
@@ -393,6 +413,7 @@ function DishList() {
       return;
     }
 
+    const loadStartTime = Date.now();
     loadingRef.current = true;
     setLoading(true);
 
@@ -422,6 +443,12 @@ function DishList() {
     } finally {
       loadingRef.current = false;
       setLoading(false);
+
+      // 记录数据加载时间（仅首次）
+      if (page === 1 && performanceMetrics.dataLoadTime === 0) {
+        performanceMetrics.dataLoadTime = Date.now() - loadStartTime;
+        console.log('[Performance] 数据加载时间:', performanceMetrics.dataLoadTime, 'ms');
+      }
     }
   };
 
@@ -430,11 +457,41 @@ function DishList() {
     loadData(1);
   }, []);
 
-  // 记录 FMP
+  // 记录首次渲染和 FMP
   useEffect(() => {
     if (dataList.length > 0 && performanceMetrics.fmpTime === 0) {
+      // 记录首次有数据的时间（自定义 FMP）
       performanceMetrics.fmpTime = Date.now() - performanceMetrics.startTime;
-      console.log('[Performance] FMP:', performanceMetrics.fmpTime, 'ms');
+      performanceMetrics.listItemCount = dataList.length;
+
+      console.log('[Performance] 自定义 FMP:', performanceMetrics.fmpTime, 'ms');
+      console.log('[Performance] 首屏加载项数:', dataList.length);
+
+      // 获取 Lynx 官方性能指标
+      try {
+        // 延迟获取以确保 FMP 已计算
+        setTimeout(() => {
+          const fmpEntry = getFmpEntry();
+          if (fmpEntry) {
+            performanceMetrics.lynxFmpTime = fmpEntry.startTime || 0;
+            performanceMetrics.firstRenderTime = fmpEntry.firstRenderTime || 0;
+
+            console.log('[Lynx Performance] 官方 FMP 时间:', performanceMetrics.lynxFmpTime, 'ms');
+            console.log('[Lynx Performance] 首次渲染时间:', performanceMetrics.firstRenderTime, 'ms');
+
+            // 输出完整的性能报告
+            logPerformanceMetrics();
+          } else {
+            console.warn('[Lynx Performance] 未获取到 FMP 条目');
+            // 即使没有 Lynx FMP 数据也输出报告
+            logPerformanceMetrics();
+          }
+        }, 200);
+      } catch (error) {
+        console.warn('[Performance] 获取性能指标失败:', error);
+        // 降级输出基础性能数据
+        logPerformanceMetrics();
+      }
     }
   }, [dataList.length]);
 

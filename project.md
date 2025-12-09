@@ -70,31 +70,33 @@
 | **分页请求** | 每次只请求10条数据，减少首屏网络开销 |
 
 #### 性能监控 API 集成
-集成 Lynx 提供的 `MetricActualFmpEntry` 性能监控：
-
-1. **添加性能指标记录对象**：
+集成 Lynx 提供的 `MetricActualFmpEntry` 性能监控，实现优化前后数据对比。
+1. 创建性能监控工具模块
+文件位置：`src/utils/performanceMonitor.ts`
+2. 添加性能指标记录
 ```tsx
-const performanceMetrics = {
+const performanceMetrics: PerformanceMetrics = {
   startTime: Date.now(),
-  fmpTime: 0,
-  dataLoadTime: 0,
+  fmpTime: 0,              // 自定义 FMP
+  dataLoadTime: 0,         // 数据加载时间
+  lynxFmpTime: 0,          // Lynx 官方 FMP
+  firstRenderTime: 0,      // 首次渲染时间
+  listItemCount: 0,        // 首屏列表项数量
 };
 ```
+3. 标记关键元件
+4. 记录 FMP 时间并获取 Lynx 性能数据
+5. 记录数据加载时间
 
-2. **标记关键元件**：
-```tsx
-<list __lynx_timing_flag="__lynx_timing_actual_fmp">
-```
+##### 效果对比
 
-3. **记录 FMP 时间**：
-```tsx
-useEffect(() => {
-  if (dataList.length > 0 && performanceMetrics.fmpTime === 0) {
-    performanceMetrics.fmpTime = Date.now() - performanceMetrics.startTime;
-    console.log('[Performance] FMP:', performanceMetrics.fmpTime, 'ms');
-  }
-}, [dataList.length]);
-```
+| 指标 | 优化前（scroll-view） | 优化后（list） | 提升幅度 |
+|------|---------------------|------------------|---------|
+| **首次渲染** | 307ms | 151ms | **50.8%** |
+| **FMP 时间** | 713ms | 555ms | **22.2%** |
+| **数据加载** | 513ms | 505ms | **1.%** |
+| **首屏项数** | 100项 | 10项 | **90%** |
+
 
 ---
 

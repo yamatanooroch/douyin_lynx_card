@@ -6,7 +6,8 @@
     "build": "rspeedy build",
     "dev": "rspeedy dev",
     "preview": "rspeedy preview",
-    "test": "vitest run"
+    "test": "vitest run",
+    "perf:real": "node scripts/monitorPerformance.cjs"
   },
   "dependencies": {
     "@lynx-js/react": "^0.114.4",
